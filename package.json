@@ -6,10 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "ts-node prisma/seed.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
+    "bcrypt": "^5.1.1",
     "gerenciador-de-projetos": "file:",
     "next": "14.2.11",
     "react": "^18",
@@ -21,6 +24,8 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.11",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prisma": "^5.19.1",
     "typescript": "^5"
   }
