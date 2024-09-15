@@ -1,15 +1,29 @@
 "use client";
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Loading from "@/components/loading";
 
-const AppContext = createContext({
-  loggedId: false,
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  photo: Buffer | null;
+}
+
+interface AppContextType {
+  loggedIn: boolean;
+  user: User | null;
+}
+
+const AppContext = createContext<AppContextType>({
+  loggedIn: false,
+  user: null,
 });
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState({
-    loggedId: false,
+  const [state, setState] = useState<AppContextType>({
+    loggedIn: false,
     user: null,
   });
 
@@ -27,7 +41,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
       if (!cookieToken) {
         console.log("No JWT token found");
-        setLoading(false); // Se não houver cookie, termine o carregamento
+        setLoading(false);
         return;
       }
 
@@ -41,7 +55,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
       if (!response.ok) {
         console.error("Error in API response:", response.statusText);
-        setLoading(false); // API falhou, termina o carregamento
+        setLoading(false);
         return;
       }
 
@@ -49,21 +63,20 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
       console.log("API result:", result);
 
       if (result && result.id) {
-        // Supondo que a resposta traga um usuário válido
         setState({
-          loggedId: true,
+          loggedIn: true,
           user: result,
         });
       }
     } catch (error) {
       console.error("Error checking login:", error);
     } finally {
-      setLoading(false); // Garante que o loading seja desativado
+      setLoading(false);
     }
   };
 
   if (loading) {
-    return <Loading />; // Exibir uma mensagem de carregamento ou um spinner
+    return <Loading />;
   }
 
   return (

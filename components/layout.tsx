@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { useAppContext } from "@/context";
 
 export default function Layout() {
-  const { loggedId } = useAppContext();
+  const { loggedIn } = useAppContext();
   const logout = () => {
     Cookies.remove("jwt");
     window.location.href = "/login";
@@ -13,16 +13,16 @@ export default function Layout() {
   return (
     <>
       <nav>
-        <h4>Finanças Pessoais</h4>
+        <h4>Gerenciador de Projetos</h4>
         <ul>
           <li>
             <a href="/">Home {}</a>
           </li>
 
-          {loggedId ? (
+          {loggedIn ? (
             <>
               <li>
-                <a href="/movimentacoes">Movimentações</a>
+                <a href="/projects">Projetos</a>
               </li>
               <li>
                 <a href="/profile">Perfil</a>

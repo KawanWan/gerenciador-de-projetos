@@ -6,7 +6,12 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password, photo } = await req.json();
+    const formData = await req.formData();
+
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const photoFile = formData.get("photo") as File;
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -17,12 +22,19 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    let photoBuffer: Buffer | null = null;
+
+    if (photoFile) {
+      const arrayBuffer = await photoFile.arrayBuffer();
+      photoBuffer = Buffer.from(arrayBuffer);
+    }
+
     const user = await prisma.users.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        photo,
+        photo: photoBuffer,
       },
     });
 

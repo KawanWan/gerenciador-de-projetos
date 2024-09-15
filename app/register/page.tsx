@@ -9,14 +9,24 @@ export default function Register() {
     email: "",
     password: "",
     passwordConfirm: "",
+    photo: null as File | null, // A foto será armazenada aqui
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
+    const { id, value, files } = e.target;
+
+    // Se for um input de arquivo (imagem)
+    if (id === "photo" && files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        photo: files[0], // Armazena o arquivo de imagem
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [id]: value,
+      }));
+    }
   };
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,17 +37,19 @@ export default function Register() {
       return;
     }
 
+    const formDataToSubmit = new FormData();
+    formDataToSubmit.append("name", formData.name);
+    formDataToSubmit.append("email", formData.email);
+    formDataToSubmit.append("password", formData.password);
+
+    if (formData.photo) {
+      formDataToSubmit.append("photo", formData.photo); // Adiciona a foto ao FormData
+    }
+
     try {
       const response = await fetch("/api/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-        }),
+        body: formDataToSubmit, // Envia como multipart/form-data
       });
 
       const data = await response.json();
@@ -106,6 +118,18 @@ export default function Register() {
                   onChange={handleChange}
                 />
               </div>
+
+              <div className="form-group mt-2">
+                <label>Foto de Perfil</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="photo"
+                  accept="image/*" // Apenas imagens serão aceitas
+                  onChange={handleChange}
+                />
+              </div>
+
               <button onClick={handleClick} className="btn btn-primary mt-2">
                 Registrar Usuário
               </button>
