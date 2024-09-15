@@ -20,33 +20,34 @@ enum TaskStatus {
 }
 
 model Users {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   photo     Bytes?
-  email     String   @unique
+  email     String     @unique
   password  String
-  tasks     Tasks[]   @relation("UserTasks")
+  tasks     Tasks[]    @relation("UserTasks")
+  projects  Projects[] @relation("UserProjects")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
-
 model Projects {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   description String?
   tasks       Tasks[]   @relation("ProjectTasks")
+  users       Users[]   @relation("UserProjects")
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Tasks {
   id          Int         @id @default(autoincrement())
   name        String
   description String?
-  status      TaskStatus  @default(PENDING)
+  status      TaskStatus @default(PENDING)
   dueDate     DateTime
   project     Projects    @relation("ProjectTasks", fields: [projectId], references: [id])
   projectId   Int
@@ -56,3 +57,4 @@ model Tasks {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 }
+
