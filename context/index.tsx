@@ -30,17 +30,14 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Executando...");
     checkLogin();
   }, []);
 
   const checkLogin = async () => {
     try {
       const cookieToken = Cookies.get("jwt");
-      console.log("Token:", cookieToken);
 
       if (!cookieToken) {
-        console.log("No JWT token found");
         setLoading(false);
         return;
       }
@@ -60,7 +57,6 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
       }
 
       const result = await response.json();
-      console.log("API result:", result);
 
       if (result && result.id) {
         setState({

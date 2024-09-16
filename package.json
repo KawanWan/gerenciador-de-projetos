@@ -15,6 +15,7 @@
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
     "cookies-next": "^4.2.1",
+    "date-fns": "^4.0.0",
     "gerenciador-de-projetos": "file:",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
